@@ -1,0 +1,114 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { cva, type VariantProps } from "class-variance-authority";
+
+const alert = cva("", {
+  variants: {
+    type: {
+      default: ["alert"],
+      error: ["alert", "alert-error"],
+      warning: ["alert", "alert-warning"],
+      success: ["alert", "alert-success"],
+      info: ["alert", "alert-info"],
+    },
+    position: {
+      "top-start": ["toast-start", "toast-top", "toast", "animate-fade-right"],
+      "top-center": ["toast-center", "toast-top", "toast", "animate-fade-down"],
+      "top-end": ["toast-end", "toast-top", "toast", "animate-fade-left"],
+      "middle-start": [
+        "toast-start",
+        "toast-middle",
+        "toast",
+        "animate-fade-right",
+      ],
+      "middle-center": [
+        "toast-center",
+        "toast-middle",
+        "toast",
+        "animate-fade",
+      ],
+      "middle-end": ["toast-end", "toast-middle", "toast", "animate-fade-left"],
+      "bottom-start": [
+        "toast-start",
+        "toast-bottom",
+        "toast",
+        "animate-fade-right",
+      ],
+      "bottom-center": [
+        "toast-center",
+        "toast-bottom",
+        "toast",
+        "animate-fade-up",
+      ],
+      "bottom-end": ["toast-end", "toast-bottom", "toast", "animate-fade-left"],
+    },
+  },
+  compoundVariants: [{ type: "default", position: "bottom-end" }],
+});
+
+export interface Props
+  extends HTMLAttributes<"div">,
+    VariantProps<typeof alert> {
+  close_after_ms?: number;
+}
+
+const {
+  type = "default",
+  position = "bottom-end",
+  close_after_ms = 3000,
+} = Astro.props;
+---
+
+<div
+  class={alert({ position })}
+  id="_astro-toast"
+  vanish-delay={close_after_ms}
+>
+  <div class={alert({ type })}>
+    {type === "info" && <i data-lucide="info" />}
+    {type === "error" && <i data-lucide="x-circle" />}
+    {type === "success" && <i data-lucide="check-circle-2" />}
+    {type === "warning" && <i data-lucide="alert-circle" />}
+    <slot />
+  </div>
+</div>
+<script>
+  import {
+    createIcons,
+    Info,
+    XCircle,
+    AlertCircle,
+    CheckCircle2,
+  } from "lucide";
+
+  createIcons({
+    icons: {
+      Info,
+      XCircle,
+      AlertCircle,
+      CheckCircle2,
+    },
+  });
+
+  window.onload = () => {
+    const toast = document.getElementById("_astro-toast") as HTMLDivElement;
+    const delay = parseInt(
+      toast.attributes.getNamedItem("vanish-delay")?.value || "3000"
+    );
+
+    const replacable_classes = [
+      "animate-fade-right",
+      "animate-fade-down",
+      "animate-fade-left",
+      "animate-fade",
+    ];
+
+    setTimeout(() => {
+      for (const c of replacable_classes) {
+        if (!toast.classList.contains(c)) continue;
+        const replaced = toast.classList.replace(c, "animate-jump-out");
+        return;
+      }
+    }, delay);
+  };
+</script>

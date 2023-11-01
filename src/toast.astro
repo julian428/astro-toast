@@ -12,35 +12,15 @@ const alert = cva("", {
       info: ["alert", "alert-info"],
     },
     position: {
-      "top-start": ["toast-start", "toast-top", "toast", "animate-fade-right"],
-      "top-center": ["toast-center", "toast-top", "toast", "animate-fade-down"],
-      "top-end": ["toast-end", "toast-top", "toast", "animate-fade-left"],
-      "middle-start": [
-        "toast-start",
-        "toast-middle",
-        "toast",
-        "animate-fade-right",
-      ],
-      "middle-center": [
-        "toast-center",
-        "toast-middle",
-        "toast",
-        "animate-fade",
-      ],
-      "middle-end": ["toast-end", "toast-middle", "toast", "animate-fade-left"],
-      "bottom-start": [
-        "toast-start",
-        "toast-bottom",
-        "toast",
-        "animate-fade-right",
-      ],
-      "bottom-center": [
-        "toast-center",
-        "toast-bottom",
-        "toast",
-        "animate-fade-up",
-      ],
-      "bottom-end": ["toast-end", "toast-bottom", "toast", "animate-fade-left"],
+      "top-start": ["top-start", "toast", "animate-fade-right"],
+      "top-center": ["top-center", "toast", "animate-fade-down"],
+      "top-end": ["top-end", "toast", "animate-fade-left"],
+      "middle-start": ["middle-start", "toast", "animate-fade-right"],
+      "middle-center": ["middle-center", "toast", "animate-fade"],
+      "middle-end": ["middle-end", "toast", "animate-fade-left"],
+      "bottom-start": ["bottom-start", "toast", "animate-fade-right"],
+      "bottom-center": ["bottom-center", "toast", "animate-fade-up"],
+      "bottom-end": ["bottom-end", "toast", "animate-fade-left"],
     },
   },
   compoundVariants: [{ type: "default", position: "bottom-end" }],
@@ -91,11 +71,7 @@ const {
   });
 
   window.onload = () => {
-    const toast = document.getElementById("_astro-toast") as HTMLDivElement;
-    const delay = parseInt(
-      toast.attributes.getNamedItem("vanish-delay")?.value || "3000"
-    );
-
+    const toast = document.querySelectorAll("#_astro-toast");
     const replacable_classes = [
       "animate-fade-right",
       "animate-fade-down",
@@ -103,12 +79,198 @@ const {
       "animate-fade",
     ];
 
-    setTimeout(() => {
-      for (const c of replacable_classes) {
-        if (!toast.classList.contains(c)) continue;
-        const replaced = toast.classList.replace(c, "animate-jump-out");
-        return;
-      }
-    }, delay);
+    toast.forEach((toast) => {
+      const delay = parseInt(
+        toast.attributes.getNamedItem("vanish-delay")?.value || "3000"
+      );
+
+      setTimeout(() => {
+        for (const c of replacable_classes) {
+          if (!toast.classList.contains(c)) continue;
+          toast.classList.replace(c, "animate-jump-out");
+          return setTimeout(() => {
+            toast.remove();
+          }, 1000);
+        }
+      }, delay);
+    });
   };
 </script>
+
+<style>
+  .alert {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    background-color: gray;
+  }
+  .alert-error {
+    background-color: red;
+  }
+  .alert-success {
+    background-color: lightgreen;
+  }
+  .alert-warning {
+    background-color: orange;
+  }
+  .alert-info {
+    background-color: skyblue;
+  }
+  .toast {
+    position: fixed;
+  }
+  .bottom-end {
+    right: 0;
+    bottom: 0;
+    transform: translate(-1vw, -1vw);
+    animation: 0.5s bottom-end;
+  }
+  .bottom-center {
+    bottom: 0;
+    transform: translate(calc(50vw - 50%), -1vw);
+    animation: 0.5s bottom-center;
+  }
+  .bottom-start {
+    left: 0;
+    bottom: 0;
+    transform: translate(1vw, -1vw);
+    animation: 0.5s bottom-start;
+  }
+
+  .middle-start {
+    left: 0;
+    transform: translate(1vw, calc(50vh - 50%));
+    animation: 0.5s middle-start;
+  }
+
+  .middle-center {
+    transform: translate(calc(50vw - 50%), calc(50vh - 50%));
+    animation: 0.5s middle-center;
+  }
+
+  .middle-end {
+    right: 0;
+    transform: translate(-1vw, calc(50vh - 50%));
+    animation: 0.5s middle-end;
+  }
+
+  .top-end {
+    top: 0;
+    right: 0;
+    transform: translate(-1vw, 1vw);
+    animation: 0.5s top-end;
+  }
+
+  .top-center {
+    top: 0;
+    transform: translate(calc(50vw - 50%), 1vw);
+    animation: 0.5s top-center;
+  }
+
+  .top-start {
+    top: 0;
+    left: 0;
+    transform: translate(1vw, 1vw);
+    animation: 0.5s top-start;
+  }
+  @keyframes bottom-end {
+    0% {
+      opacity: 0;
+      transform: translateX(1vw);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(-1vw, -1vw);
+    }
+  }
+
+  @keyframes bottom-center {
+    0% {
+      opacity: 0;
+      transform: translate(calc(50vw - 50%), 1vw);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(calc(50vw - 50%), -1vw);
+    }
+  }
+
+  @keyframes bottom-start {
+    0% {
+      opacity: 0;
+      transform: translate(-1vw, 1vw);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(1vw, -1vw);
+    }
+  }
+
+  @keyframes middle-start {
+    0% {
+      opacity: 0;
+      transform: translate(-1vw, calc(50vh - 50%));
+    }
+    100% {
+      opacity: 1;
+      transform: translate(1vw, calc(50vh - 50%));
+    }
+  }
+
+  @keyframes middle-center {
+    0% {
+      opacity: 0;
+      transform: translate(calc(50vw - 50%), calc(50vh - 50%));
+    }
+    100% {
+      opacity: 1;
+      transform: translate(calc(50vw - 50%), calc(50vh - 50%));
+    }
+  }
+
+  @keyframes middle-end {
+    0% {
+      opacity: 0;
+      transform: translate(1vw, calc(50vh - 50%));
+    }
+    100% {
+      opacity: 1;
+      transform: translate(-1vw, calc(50vh - 50%));
+    }
+  }
+
+  @keyframes top-end {
+    0% {
+      opacity: 0;
+      transform: translate(1vw, -1vw);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(-1vw, 1vw);
+    }
+  }
+
+  @keyframes top-center {
+    0% {
+      opacity: 0;
+      transform: translate(calc(50vw - 50%), -1vw);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(calc(50vw - 50%), 1vw);
+    }
+  }
+
+  @keyframes top-start {
+    0% {
+      opacity: 0;
+      transform: translate(-1vw, -1vw);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(1vw, 1vw);
+    }
+  }
+</style>

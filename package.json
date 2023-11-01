@@ -2,6 +2,7 @@
   "name": "astro-toast",
   "version": "1.0.0",
   "type": "module",
+  "homepage": "https://github.com/julian428/astro-toast",
   "exports": {
     ".": "./index.ts"
   },
@@ -10,7 +11,9 @@
     "index.ts"
   ],
   "keywords": [
-    "astro-component"
+    "astro-component",
+    "astro",
+    "withastro"
   ],
   "scripts": {},
   "devDependencies": {

@@ -23,31 +23,97 @@ const {
 
 <div class={position} id="_astro-toast" vanish-delay={close_after_ms}>
   <div class={`alert ${type}`}>
-    {type === "info" && <i data-lucide="info" />}
-    {type === "error" && <i data-lucide="x-circle" />}
-    {type === "success" && <i data-lucide="check-circle-2" />}
-    {type === "warning" && <i data-lucide="alert-circle" />}
+    {
+      type === "info" && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-info"
+        >
+          <path d="M12 16v-4" />
+          <>
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 8h.01" />
+          </>
+        </svg>
+      )
+    }
+    {
+      type === "error" && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-x-circle"
+        >
+          <path d="m15 9-6 6" />
+          <>
+            <circle cx="12" cy="12" r="10" />
+            <path d="m9 9 6 6" />
+          </>
+        </svg>
+      )
+    }
+    {
+      type === "success" && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-check-circle-2"
+        >
+          <>
+            <circle cx="12" cy="12" r="10" />
+            <path d="m9 12 2 2 4-4" />
+          </>
+        </svg>
+      )
+    }
+    {
+      type === "warning" && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-alert-triangle"
+        >
+          <path d="M12 9v4" />
+          <>
+            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+            <path d="M12 17h.01" />
+          </>
+        </svg>
+      )
+    }
     <slot />
   </div>
 </div>
 <script>
-  import {
-    createIcons,
-    Info,
-    XCircle,
-    AlertCircle,
-    CheckCircle2,
-  } from "lucide";
-
-  createIcons({
-    icons: {
-      Info,
-      XCircle,
-      AlertCircle,
-      CheckCircle2,
-    },
-  });
-
   window.onload = () => {
     const toasts = document.querySelectorAll("#_astro-toast");
 

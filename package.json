@@ -20,12 +20,10 @@
     "astro": "^3.4.1"
   },
   "peerDependencies": {
-    "astro": "^3.0.0",
-    "lucide": "^0.291.0"
+    "astro": "^3.0.0"
   },
   "dependencies": {
     "@astrojs/check": "^0.3.0",
-    "lucide": "^0.291.0",
     "typescript": "^5.2.2"
   }
 }

@@ -1,35 +1,17 @@
 ---
-import type { HTMLAttributes } from "astro/types";
-import { cva, type VariantProps } from "class-variance-authority";
-
-const alert = cva("", {
-  variants: {
-    type: {
-      default: ["alert"],
-      error: ["alert", "alert-error"],
-      warning: ["alert", "alert-warning"],
-      success: ["alert", "alert-success"],
-      info: ["alert", "alert-info"],
-    },
-    position: {
-      "top-start": ["top-start", "toast", "animate-fade-right"],
-      "top-center": ["top-center", "toast", "animate-fade-down"],
-      "top-end": ["top-end", "toast", "animate-fade-left"],
-      "middle-start": ["middle-start", "toast", "animate-fade-right"],
-      "middle-center": ["middle-center", "toast", "animate-fade"],
-      "middle-end": ["middle-end", "toast", "animate-fade-left"],
-      "bottom-start": ["bottom-start", "toast", "animate-fade-right"],
-      "bottom-center": ["bottom-center", "toast", "animate-fade-up"],
-      "bottom-end": ["bottom-end", "toast", "animate-fade-left"],
-    },
-  },
-  compoundVariants: [{ type: "default", position: "bottom-end" }],
-});
-
-export interface Props
-  extends HTMLAttributes<"div">,
-    VariantProps<typeof alert> {
+export interface Props {
   close_after_ms?: number;
+  type?: "error" | "warning" | "success" | "info";
+  position?:
+    | "top-start"
+    | "top-center"
+    | "top-end"
+    | "middle-start"
+    | "middle-center"
+    | "middle-end"
+    | "bottom-start"
+    | "bottom-center"
+    | "bottom-end";
 }
 
 const {
@@ -39,12 +21,8 @@ const {
 } = Astro.props;
 ---
 
-<div
-  class={alert({ position })}
-  id="_astro-toast"
-  vanish-delay={close_after_ms}
->
-  <div class={alert({ type })}>
+<div class={position} id="_astro-toast" vanish-delay={close_after_ms}>
+  <div class={`alert ${type}`}>
     {type === "info" && <i data-lucide="info" />}
     {type === "error" && <i data-lucide="x-circle" />}
     {type === "success" && <i data-lucide="check-circle-2" />}
@@ -71,27 +49,18 @@ const {
   });
 
   window.onload = () => {
-    const toast = document.querySelectorAll("#_astro-toast");
-    const replacable_classes = [
-      "animate-fade-right",
-      "animate-fade-down",
-      "animate-fade-left",
-      "animate-fade",
-    ];
+    const toasts = document.querySelectorAll("#_astro-toast");
 
-    toast.forEach((toast) => {
+    toasts.forEach((toast) => {
       const delay = parseInt(
         toast.attributes.getNamedItem("vanish-delay")?.value || "3000"
       );
 
       setTimeout(() => {
-        for (const c of replacable_classes) {
-          if (!toast.classList.contains(c)) continue;
-          toast.classList.replace(c, "animate-jump-out");
-          return setTimeout(() => {
-            toast.remove();
-          }, 1000);
-        }
+        toast.classList.add("");
+        return setTimeout(() => {
+          toast.remove();
+        }, 1000);
       }, delay);
     });
   };
@@ -106,33 +75,33 @@ const {
     border-radius: 1rem;
     background-color: gray;
   }
-  .alert-error {
+  .error {
     background-color: red;
   }
-  .alert-success {
+  .success {
     background-color: lightgreen;
   }
-  .alert-warning {
+  .warning {
     background-color: orange;
   }
-  .alert-info {
+  .info {
     background-color: skyblue;
   }
-  .toast {
-    position: fixed;
-  }
   .bottom-end {
+    position: fixed;
     right: 0;
     bottom: 0;
     transform: translate(-1vw, -1vw);
     animation: 0.5s bottom-end;
   }
   .bottom-center {
+    position: fixed;
     bottom: 0;
     transform: translate(calc(50vw - 50%), -1vw);
     animation: 0.5s bottom-center;
   }
   .bottom-start {
+    position: fixed;
     left: 0;
     bottom: 0;
     transform: translate(1vw, -1vw);
@@ -140,23 +109,27 @@ const {
   }
 
   .middle-start {
+    position: fixed;
     left: 0;
     transform: translate(1vw, calc(50vh - 50%));
     animation: 0.5s middle-start;
   }
 
   .middle-center {
+    position: fixed;
     transform: translate(calc(50vw - 50%), calc(50vh - 50%));
     animation: 0.5s middle-center;
   }
 
   .middle-end {
+    position: fixed;
     right: 0;
     transform: translate(-1vw, calc(50vh - 50%));
     animation: 0.5s middle-end;
   }
 
   .top-end {
+    position: fixed;
     top: 0;
     right: 0;
     transform: translate(-1vw, 1vw);
@@ -164,12 +137,14 @@ const {
   }
 
   .top-center {
+    position: fixed;
     top: 0;
     transform: translate(calc(50vw - 50%), 1vw);
     animation: 0.5s top-center;
   }
 
   .top-start {
+    position: fixed;
     top: 0;
     left: 0;
     transform: translate(1vw, 1vw);

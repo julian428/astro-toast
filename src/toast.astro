@@ -123,7 +123,7 @@ const {
       );
 
       setTimeout(() => {
-        toast.classList.add("");
+        toast.classList.add("jump-out");
         return setTimeout(() => {
           toast.remove();
         }, 1000);
@@ -312,6 +312,23 @@ const {
     100% {
       opacity: 1;
       transform: translate(1vw, 1vw);
+    }
+  }
+  .jump-out {
+    animation: 0.5s jump-out;
+    opacity: 0;
+  }
+  @keyframes jump-out {
+    0% {
+      opacity: 1;
+    }
+    80% {
+      scale: 1.1;
+      opacity: 1;
+    }
+    100% {
+      scale: 0.5;
+      opacity: 0;
     }
   }
 </style>

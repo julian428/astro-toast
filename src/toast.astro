@@ -1,6 +1,5 @@
 ---
-export interface Props {
-  close_after_ms?: number;
+interface Props {
   type?: "error" | "warning" | "success" | "info";
   position?:
     | "top-start"
@@ -14,14 +13,10 @@ export interface Props {
     | "bottom-end";
 }
 
-const {
-  type = "default",
-  position = "bottom-end",
-  close_after_ms = 3000,
-} = Astro.props;
+const { type = "default", position = "bottom-end" } = Astro.props;
 ---
 
-<div class={position} id="_astro-toast" vanish-delay={close_after_ms}>
+<div class={position}>
   <div class={`alert ${type}`}>
     {
       type === "info" && (
@@ -113,24 +108,6 @@ const {
     <slot />
   </div>
 </div>
-<script>
-  window.onload = () => {
-    const toasts = document.querySelectorAll("#_astro-toast");
-
-    toasts.forEach((toast) => {
-      const delay = parseInt(
-        toast.attributes.getNamedItem("vanish-delay")?.value || "3000"
-      );
-
-      setTimeout(() => {
-        toast.classList.add("jump-out");
-        return setTimeout(() => {
-          toast.remove();
-        }, 1000);
-      }, delay);
-    });
-  };
-</script>
 
 <style>
   .alert {
@@ -157,73 +134,90 @@ const {
     position: fixed;
     right: 0;
     bottom: 0;
+    opacity: 0;
     transform: translate(-1vw, -1vw);
-    animation: 0.5s bottom-end;
+    animation: 6s bottom-end;
   }
   .bottom-center {
     position: fixed;
     bottom: 0;
+    opacity: 0;
     transform: translate(calc(50vw - 50%), -1vw);
-    animation: 0.5s bottom-center;
+    animation: 6s bottom-center;
   }
   .bottom-start {
     position: fixed;
     left: 0;
     bottom: 0;
+    opacity: 0;
     transform: translate(1vw, -1vw);
-    animation: 0.5s bottom-start;
+    animation: 6s bottom-start;
   }
 
   .middle-start {
     position: fixed;
     left: 0;
+    opacity: 0;
     transform: translate(1vw, calc(50vh - 50%));
-    animation: 0.5s middle-start;
+    animation: 6s middle-start;
   }
 
   .middle-center {
     position: fixed;
+    opacity: 0;
     transform: translate(calc(50vw - 50%), calc(50vh - 50%));
-    animation: 0.5s middle-center;
+    animation: 6s middle-center;
   }
 
   .middle-end {
     position: fixed;
     right: 0;
+    opacity: 0;
     transform: translate(-1vw, calc(50vh - 50%));
-    animation: 0.5s middle-end;
+    animation: 6s middle-end;
   }
 
   .top-end {
     position: fixed;
     top: 0;
     right: 0;
+    opacity: 0;
     transform: translate(-1vw, 1vw);
-    animation: 0.5s top-end;
+    animation: 6s top-end;
   }
 
   .top-center {
     position: fixed;
     top: 0;
+    opacity: 0;
     transform: translate(calc(50vw - 50%), 1vw);
-    animation: 0.5s top-center;
+    animation: 6s top-center;
   }
 
   .top-start {
     position: fixed;
     top: 0;
     left: 0;
+    opacity: 0;
     transform: translate(1vw, 1vw);
-    animation: 0.5s top-start;
+    animation: 6s top-start;
   }
   @keyframes bottom-end {
     0% {
       opacity: 0;
       transform: translateX(1vw);
     }
-    100% {
+    10% {
       opacity: 1;
       transform: translate(-1vw, -1vw);
+    }
+    90% {
+      opacity: 1;
+      transform: translate(-1vw, -1vw);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(1vw);
     }
   }
 
@@ -232,9 +226,17 @@ const {
       opacity: 0;
       transform: translate(calc(50vw - 50%), 1vw);
     }
-    100% {
+    10% {
       opacity: 1;
       transform: translate(calc(50vw - 50%), -1vw);
+    }
+    90% {
+      opacity: 1;
+      transform: translate(calc(50vw - 50%), -1vw);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(calc(50vw - 50%), 1vw);
     }
   }
 
@@ -243,9 +245,17 @@ const {
       opacity: 0;
       transform: translate(-1vw, 1vw);
     }
-    100% {
+    10% {
       opacity: 1;
       transform: translate(1vw, -1vw);
+    }
+    90% {
+      opacity: 1;
+      transform: translate(1vw, -1vw);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-1vw, 1vw);
     }
   }
 
@@ -254,9 +264,17 @@ const {
       opacity: 0;
       transform: translate(-1vw, calc(50vh - 50%));
     }
-    100% {
+    10% {
       opacity: 1;
       transform: translate(1vw, calc(50vh - 50%));
+    }
+    90% {
+      opacity: 1;
+      transform: translate(1vw, calc(50vh - 50%));
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-1vw, calc(50vh - 50%));
     }
   }
 
@@ -265,8 +283,16 @@ const {
       opacity: 0;
       transform: translate(calc(50vw - 50%), calc(50vh - 50%));
     }
-    100% {
+    10% {
       opacity: 1;
+      transform: translate(calc(50vw - 50%), calc(50vh - 50%));
+    }
+    90% {
+      opacity: 1;
+      transform: translate(calc(50vw - 50%), calc(50vh - 50%));
+    }
+    100% {
+      opacity: 0;
       transform: translate(calc(50vw - 50%), calc(50vh - 50%));
     }
   }
@@ -276,9 +302,17 @@ const {
       opacity: 0;
       transform: translate(1vw, calc(50vh - 50%));
     }
-    100% {
+    10% {
       opacity: 1;
       transform: translate(-1vw, calc(50vh - 50%));
+    }
+    90% {
+      opacity: 1;
+      transform: translate(-1vw, calc(50vh - 50%));
+    }
+    100% {
+      opacity: 0;
+      transform: translate(1vw, calc(50vh - 50%));
     }
   }
 
@@ -287,9 +321,17 @@ const {
       opacity: 0;
       transform: translate(1vw, -1vw);
     }
-    100% {
+    10% {
       opacity: 1;
       transform: translate(-1vw, 1vw);
+    }
+    90% {
+      opacity: 1;
+      transform: translate(-1vw, 1vw);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(1vw, -1vw);
     }
   }
 
@@ -298,9 +340,17 @@ const {
       opacity: 0;
       transform: translate(calc(50vw - 50%), -1vw);
     }
-    100% {
+    10% {
       opacity: 1;
       transform: translate(calc(50vw - 50%), 1vw);
+    }
+    90% {
+      opacity: 1;
+      transform: translate(calc(50vw - 50%), 1vw);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(calc(50vw - 50%), -1vw);
     }
   }
 
@@ -309,13 +359,21 @@ const {
       opacity: 0;
       transform: translate(-1vw, -1vw);
     }
-    100% {
+    10% {
       opacity: 1;
       transform: translate(1vw, 1vw);
     }
+    90% {
+      opacity: 1;
+      transform: translate(1vw, 1vw);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-1vw, -1vw);
+    }
   }
   .jump-out {
-    animation: 0.5s jump-out;
+    animation: 6s jump-out;
     opacity: 0;
   }
   @keyframes jump-out {

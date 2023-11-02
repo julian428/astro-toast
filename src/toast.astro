@@ -1,6 +1,8 @@
 ---
-interface Props {
-  type?: "error" | "warning" | "success" | "info";
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"div"> {
+  type?: "error" | "warning" | "success" | "info" | "default";
   position?:
     | "top-start"
     | "top-center"
@@ -13,109 +15,159 @@ interface Props {
     | "bottom-end";
 }
 
-const { type = "default", position = "bottom-end" } = Astro.props;
+const {
+  type = "default",
+  position = "bottom-end",
+  style,
+  ...props
+} = Astro.props;
+const positions: { [key: string]: { [subKey: string]: string } } = {
+  "top-start": {
+    top: "0",
+    left: "0",
+    transform: "translate(1vw, 1vw)",
+  },
+  "top-center": {
+    top: "0",
+    transform: "translate(calc(50vw - 50%), 1vw)",
+  },
+  "top-end": {
+    top: "0",
+    right: "0",
+    transform: "translate(-1vw, 1vw)",
+  },
+  "middle-start": {
+    left: "0",
+    transform: "translate(1vw, calc(50vh - 50%))",
+  },
+  "middle-center": {
+    transform: "translate(calc(50vw - 50%), calc(50vh - 50%))",
+  },
+  "middle-end": {
+    right: "0",
+    transform: "translate(-1vw, calc(50vh - 50%))",
+  },
+  "bottom-start": {
+    bottom: "0",
+    left: "0",
+    transform: "translate(1vw, -1vw)",
+  },
+  "bottom-center": {
+    bottom: "0",
+    transform: "translate(calc(50vw - 50%), -1vw)",
+  },
+  "bottom-end": {
+    right: "0",
+    bottom: "0",
+    transform: "translate(-1vw, -1vw)",
+  },
+};
+const styles: Partial<CSSStyleDeclaration> = {
+  position: "fixed",
+  display: "flex",
+  alignItems: "center",
+  gap: "8px",
+  padding: "1rem 2rem",
+  borderRadius: "1rem",
+  opacity: "0",
+  animation: `5s ${position}`,
+  ...positions[position],
+};
 ---
 
-<div class={position}>
-  <div class={`alert ${type}`}>
-    {
-      type === "info" && (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-info"
-        >
-          <path d="M12 16v-4" />
-          <>
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 8h.01" />
-          </>
-        </svg>
-      )
-    }
-    {
-      type === "error" && (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-x-circle"
-        >
-          <path d="m15 9-6 6" />
-          <>
-            <circle cx="12" cy="12" r="10" />
-            <path d="m9 9 6 6" />
-          </>
-        </svg>
-      )
-    }
-    {
-      type === "success" && (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-check-circle-2"
-        >
-          <>
-            <circle cx="12" cy="12" r="10" />
-            <path d="m9 12 2 2 4-4" />
-          </>
-        </svg>
-      )
-    }
-    {
-      type === "warning" && (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-alert-triangle"
-        >
-          <path d="M12 9v4" />
-          <>
-            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
-            <path d="M12 17h.01" />
-          </>
-        </svg>
-      )
-    }
-    <slot />
-  </div>
+<div style={styles as { [key: string]: string }} class={`${type}`} {...props}>
+  {
+    type === "info" && (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-info"
+      >
+        <path d="M12 16v-4" />
+        <>
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 8h.01" />
+        </>
+      </svg>
+    )
+  }
+  {
+    type === "error" && (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-x-circle"
+      >
+        <path d="m15 9-6 6" />
+        <>
+          <circle cx="12" cy="12" r="10" />
+          <path d="m9 9 6 6" />
+        </>
+      </svg>
+    )
+  }
+  {
+    type === "success" && (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-check-circle-2"
+      >
+        <>
+          <circle cx="12" cy="12" r="10" />
+          <path d="m9 12 2 2 4-4" />
+        </>
+      </svg>
+    )
+  }
+  {
+    type === "warning" && (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-alert-triangle"
+      >
+        <path d="M12 9v4" />
+        <>
+          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+          <path d="M12 17h.01" />
+        </>
+      </svg>
+    )
+  }
+  <slot />
 </div>
 
 <style>
-  .alert {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 1rem 2rem;
-    border-radius: 1rem;
+  .default {
     background-color: gray;
   }
   .error {
@@ -130,81 +182,9 @@ const { type = "default", position = "bottom-end" } = Astro.props;
   .info {
     background-color: skyblue;
   }
-  .bottom-end {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    opacity: 0;
-    transform: translate(-1vw, -1vw);
-    animation: 6s bottom-end;
-  }
-  .bottom-center {
-    position: fixed;
-    bottom: 0;
-    opacity: 0;
-    transform: translate(calc(50vw - 50%), -1vw);
-    animation: 6s bottom-center;
-  }
-  .bottom-start {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    opacity: 0;
-    transform: translate(1vw, -1vw);
-    animation: 6s bottom-start;
-  }
 
-  .middle-start {
-    position: fixed;
-    left: 0;
-    opacity: 0;
-    transform: translate(1vw, calc(50vh - 50%));
-    animation: 6s middle-start;
-  }
-
-  .middle-center {
-    position: fixed;
-    opacity: 0;
-    transform: translate(calc(50vw - 50%), calc(50vh - 50%));
-    animation: 6s middle-center;
-  }
-
-  .middle-end {
-    position: fixed;
-    right: 0;
-    opacity: 0;
-    transform: translate(-1vw, calc(50vh - 50%));
-    animation: 6s middle-end;
-  }
-
-  .top-end {
-    position: fixed;
-    top: 0;
-    right: 0;
-    opacity: 0;
-    transform: translate(-1vw, 1vw);
-    animation: 6s top-end;
-  }
-
-  .top-center {
-    position: fixed;
-    top: 0;
-    opacity: 0;
-    transform: translate(calc(50vw - 50%), 1vw);
-    animation: 6s top-center;
-  }
-
-  .top-start {
-    position: fixed;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    transform: translate(1vw, 1vw);
-    animation: 6s top-start;
-  }
   @keyframes bottom-end {
     0% {
-      opacity: 0;
       transform: translateX(1vw);
     }
     10% {
@@ -216,14 +196,12 @@ const { type = "default", position = "bottom-end" } = Astro.props;
       transform: translate(-1vw, -1vw);
     }
     100% {
-      opacity: 0;
       transform: translateX(1vw);
     }
   }
 
   @keyframes bottom-center {
     0% {
-      opacity: 0;
       transform: translate(calc(50vw - 50%), 1vw);
     }
     10% {
@@ -235,14 +213,12 @@ const { type = "default", position = "bottom-end" } = Astro.props;
       transform: translate(calc(50vw - 50%), -1vw);
     }
     100% {
-      opacity: 0;
       transform: translate(calc(50vw - 50%), 1vw);
     }
   }
 
   @keyframes bottom-start {
     0% {
-      opacity: 0;
       transform: translate(-1vw, 1vw);
     }
     10% {
@@ -254,14 +230,12 @@ const { type = "default", position = "bottom-end" } = Astro.props;
       transform: translate(1vw, -1vw);
     }
     100% {
-      opacity: 0;
       transform: translate(-1vw, 1vw);
     }
   }
 
   @keyframes middle-start {
     0% {
-      opacity: 0;
       transform: translate(-1vw, calc(50vh - 50%));
     }
     10% {
@@ -273,14 +247,12 @@ const { type = "default", position = "bottom-end" } = Astro.props;
       transform: translate(1vw, calc(50vh - 50%));
     }
     100% {
-      opacity: 0;
       transform: translate(-1vw, calc(50vh - 50%));
     }
   }
 
   @keyframes middle-center {
     0% {
-      opacity: 0;
       transform: translate(calc(50vw - 50%), calc(50vh - 50%));
     }
     10% {
@@ -292,14 +264,12 @@ const { type = "default", position = "bottom-end" } = Astro.props;
       transform: translate(calc(50vw - 50%), calc(50vh - 50%));
     }
     100% {
-      opacity: 0;
       transform: translate(calc(50vw - 50%), calc(50vh - 50%));
     }
   }
 
   @keyframes middle-end {
     0% {
-      opacity: 0;
       transform: translate(1vw, calc(50vh - 50%));
     }
     10% {
@@ -311,14 +281,12 @@ const { type = "default", position = "bottom-end" } = Astro.props;
       transform: translate(-1vw, calc(50vh - 50%));
     }
     100% {
-      opacity: 0;
       transform: translate(1vw, calc(50vh - 50%));
     }
   }
 
   @keyframes top-end {
     0% {
-      opacity: 0;
       transform: translate(1vw, -1vw);
     }
     10% {
@@ -330,14 +298,12 @@ const { type = "default", position = "bottom-end" } = Astro.props;
       transform: translate(-1vw, 1vw);
     }
     100% {
-      opacity: 0;
       transform: translate(1vw, -1vw);
     }
   }
 
   @keyframes top-center {
     0% {
-      opacity: 0;
       transform: translate(calc(50vw - 50%), -1vw);
     }
     10% {
@@ -349,14 +315,12 @@ const { type = "default", position = "bottom-end" } = Astro.props;
       transform: translate(calc(50vw - 50%), 1vw);
     }
     100% {
-      opacity: 0;
       transform: translate(calc(50vw - 50%), -1vw);
     }
   }
 
   @keyframes top-start {
     0% {
-      opacity: 0;
       transform: translate(-1vw, -1vw);
     }
     10% {
@@ -368,20 +332,7 @@ const { type = "default", position = "bottom-end" } = Astro.props;
       transform: translate(1vw, 1vw);
     }
     100% {
-      opacity: 0;
       transform: translate(-1vw, -1vw);
-    }
-  }
-  .jump-out {
-    animation: 6s jump-out;
-    opacity: 0;
-  }
-  @keyframes jump-out {
-    0% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
     }
   }
 </style>

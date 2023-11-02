@@ -1,35 +1,49 @@
-# Astro Starter Kit: Component Package
+# astro-toast
 
-This is a template for an Astro component library. Use this template for writing components to use in multiple projects or publish to NPM.
+**astro-toast** is a simple library for displaying toasts on your website.
 
-```sh
-npm create astro@latest -- --template component
+## Example:
+
+```html
+---
+import Toast from "astro-toast";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content="{Astro.generator}" />
+    <title>Astro</title>
+  </head>
+  <body>
+    <Toast type="success" position="top-start">Message</Toast>
+    <Toast type="error" position="top-center">Message</Toast>
+    <Toast type="info" position="top-end">Message</Toast>
+    <Toast type="success" position="middle-start">Message</Toast>
+    <Toast position="middle-center">Message</Toast>
+    <Toast type="info" position="middle-end">Message</Toast>
+    <Toast type="success" position="bottom-start">Message</Toast>
+    <Toast type="error" position="bottom-center">Message</Toast>
+    <Toast type="info" position="bottom-end">Message</Toast>
+  </body>
+</html>
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/non-html-pages)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/non-html-pages)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/component/devcontainer.json)
+## Props:
 
-## 🚀 Project Structure
+```ts
+type?: "error" | "warning" | "success" | "info";
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── index.ts
-├── src
-│   └── MyComponent.astro
-├── tsconfig.json
-├── package.json
+position?:
+| "top-start"
+| "top-center"
+| "top-end"
+| "middle-start"
+| "middle-center"
+| "middle-end"
+| "bottom-start"
+| "bottom-center"
+| "bottom-end";
 ```
-
-The `index.ts` file is the "entry point" for your package. Export your components in `index.ts` to make them importable from your package.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command       | Action                                                                                                                                                                                                                           |
-| :------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `npm link`    | Registers this package locally. Run `npm link my-component-library` in an Astro project to install your components                                                                                                               |
-| `npm publish` | [Publishes](https://docs.npmjs.com/creating-and-publishing-unscoped-public-packages#publishing-unscoped-public-packages) this package to NPM. Requires you to be [logged in](https://docs.npmjs.com/cli/v8/commands/npm-adduser) |

@@ -1,14 +1,17 @@
 {
   "name": "astro-toast",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "type": "module",
+  "author": "Julian Metzger",
+  "license": "MIT",
   "homepage": "https://github.com/julian428/astro-toast",
   "exports": {
     ".": "./index.ts"
   },
   "files": [
     "src",
-    "index.ts"
+    "index.ts",
+    "dist"
   ],
   "keywords": [
     "astro-component",
@@ -17,13 +20,14 @@
   ],
   "scripts": {},
   "devDependencies": {
-    "astro": "^3.4.1"
+    "astro": "^3.4.1",
+    "daisyui": "^3.9.4",
+    "tailwindcss": "^3.3.5",
+    "tailwindcss-animated": "^1.0.1",
+    "class-variance-authority": "^0.7.0"
   },
   "peerDependencies": {
-    "astro": "^3.0.0"
-  },
-  "dependencies": {
-    "@astrojs/check": "^0.3.0",
-    "typescript": "^5.2.2"
+    "astro": "^3.0.0",
+    "class-variance-authority": "^0.7.0"
   }
 }

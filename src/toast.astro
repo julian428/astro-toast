@@ -1,83 +1,43 @@
 ---
 import type { HTMLAttributes } from "astro/types";
+import { cva, type VariantProps } from "class-variance-authority";
+import "../dist/output.css";
 
-interface Props extends HTMLAttributes<"div"> {
-  type?: "error" | "warning" | "success" | "info" | "default";
-  position?:
-    | "top-start"
-    | "top-center"
-    | "top-end"
-    | "middle-start"
-    | "middle-center"
-    | "middle-end"
-    | "bottom-start"
-    | "bottom-center"
-    | "bottom-end";
-}
+const alert = cva(
+  "flex-row items-center gap-4 alert toast w-fit m-4 text-black animate-pop-in-out opacity-0",
+  {
+    variants: {
+      variant: {
+        default: "",
+        info: "bg-blue-400",
+        error: "bg-red-600",
+        success: "bg-green-500",
+        warning: "bg-orange-500",
+      },
+      where: {
+        "top-start": "toast-top toast-start",
+        "top-center": "toast-top toast-center",
+        "top-end": "toast-top toast-end",
+        "middle-start": "toast-middle toast-start",
+        "middle-center": "toast-middle toast-center",
+        "middle-end": "toast-middle toast-end",
+        "bottom-start": "toast-bottom toast-start",
+        "bottom-center": "toast-bottom toast-center",
+        "bottom-end": "toast-bottom toast-end",
+      },
+    },
+    compoundVariants: [{ variant: "default", where: "bottom-end" }],
+  }
+);
 
-const {
-  type = "default",
-  position = "bottom-end",
-  style,
-  ...props
-} = Astro.props;
-const positions: { [key: string]: { [subKey: string]: string } } = {
-  "top-start": {
-    top: "0",
-    left: "0",
-    transform: "translate(1vw, 1vw)",
-  },
-  "top-center": {
-    top: "0",
-    transform: "translate(calc(50vw - 50%), 1vw)",
-  },
-  "top-end": {
-    top: "0",
-    right: "0",
-    transform: "translate(-1vw, 1vw)",
-  },
-  "middle-start": {
-    left: "0",
-    transform: "translate(1vw, calc(50vh - 50%))",
-  },
-  "middle-center": {
-    transform: "translate(calc(50vw - 50%), calc(50vh - 50%))",
-  },
-  "middle-end": {
-    right: "0",
-    transform: "translate(-1vw, calc(50vh - 50%))",
-  },
-  "bottom-start": {
-    bottom: "0",
-    left: "0",
-    transform: "translate(1vw, -1vw)",
-  },
-  "bottom-center": {
-    bottom: "0",
-    transform: "translate(calc(50vw - 50%), -1vw)",
-  },
-  "bottom-end": {
-    right: "0",
-    bottom: "0",
-    transform: "translate(-1vw, -1vw)",
-  },
-};
-const styles: Partial<CSSStyleDeclaration> = {
-  position: "fixed",
-  display: "flex",
-  alignItems: "center",
-  gap: "8px",
-  padding: "1rem 2rem",
-  borderRadius: "1rem",
-  opacity: "0",
-  animation: `5s ${position}`,
-  ...positions[position],
-};
+interface Props extends HTMLAttributes<"div">, VariantProps<typeof alert> {}
+
+const { variant = "default", where = "bottom-end", ...props } = Astro.props;
 ---
 
-<div style={styles as { [key: string]: string }} class={`${type}`} {...props}>
+<div class={alert({ variant, where })} {...props}>
   {
-    type === "info" && (
+    variant === "info" && (
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -99,7 +59,7 @@ const styles: Partial<CSSStyleDeclaration> = {
     )
   }
   {
-    type === "error" && (
+    variant === "error" && (
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -121,7 +81,7 @@ const styles: Partial<CSSStyleDeclaration> = {
     )
   }
   {
-    type === "success" && (
+    variant === "success" && (
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -142,7 +102,7 @@ const styles: Partial<CSSStyleDeclaration> = {
     )
   }
   {
-    type === "warning" && (
+    variant === "warning" && (
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -165,174 +125,3 @@ const styles: Partial<CSSStyleDeclaration> = {
   }
   <slot />
 </div>
-
-<style>
-  .default {
-    background-color: gray;
-  }
-  .error {
-    background-color: red;
-  }
-  .success {
-    background-color: lightgreen;
-  }
-  .warning {
-    background-color: orange;
-  }
-  .info {
-    background-color: skyblue;
-  }
-
-  @keyframes bottom-end {
-    0% {
-      transform: translateX(1vw);
-    }
-    10% {
-      opacity: 1;
-      transform: translate(-1vw, -1vw);
-    }
-    90% {
-      opacity: 1;
-      transform: translate(-1vw, -1vw);
-    }
-    100% {
-      transform: translateX(1vw);
-    }
-  }
-
-  @keyframes bottom-center {
-    0% {
-      transform: translate(calc(50vw - 50%), 1vw);
-    }
-    10% {
-      opacity: 1;
-      transform: translate(calc(50vw - 50%), -1vw);
-    }
-    90% {
-      opacity: 1;
-      transform: translate(calc(50vw - 50%), -1vw);
-    }
-    100% {
-      transform: translate(calc(50vw - 50%), 1vw);
-    }
-  }
-
-  @keyframes bottom-start {
-    0% {
-      transform: translate(-1vw, 1vw);
-    }
-    10% {
-      opacity: 1;
-      transform: translate(1vw, -1vw);
-    }
-    90% {
-      opacity: 1;
-      transform: translate(1vw, -1vw);
-    }
-    100% {
-      transform: translate(-1vw, 1vw);
-    }
-  }
-
-  @keyframes middle-start {
-    0% {
-      transform: translate(-1vw, calc(50vh - 50%));
-    }
-    10% {
-      opacity: 1;
-      transform: translate(1vw, calc(50vh - 50%));
-    }
-    90% {
-      opacity: 1;
-      transform: translate(1vw, calc(50vh - 50%));
-    }
-    100% {
-      transform: translate(-1vw, calc(50vh - 50%));
-    }
-  }
-
-  @keyframes middle-center {
-    0% {
-      transform: translate(calc(50vw - 50%), calc(50vh - 50%));
-    }
-    10% {
-      opacity: 1;
-      transform: translate(calc(50vw - 50%), calc(50vh - 50%));
-    }
-    90% {
-      opacity: 1;
-      transform: translate(calc(50vw - 50%), calc(50vh - 50%));
-    }
-    100% {
-      transform: translate(calc(50vw - 50%), calc(50vh - 50%));
-    }
-  }
-
-  @keyframes middle-end {
-    0% {
-      transform: translate(1vw, calc(50vh - 50%));
-    }
-    10% {
-      opacity: 1;
-      transform: translate(-1vw, calc(50vh - 50%));
-    }
-    90% {
-      opacity: 1;
-      transform: translate(-1vw, calc(50vh - 50%));
-    }
-    100% {
-      transform: translate(1vw, calc(50vh - 50%));
-    }
-  }
-
-  @keyframes top-end {
-    0% {
-      transform: translate(1vw, -1vw);
-    }
-    10% {
-      opacity: 1;
-      transform: translate(-1vw, 1vw);
-    }
-    90% {
-      opacity: 1;
-      transform: translate(-1vw, 1vw);
-    }
-    100% {
-      transform: translate(1vw, -1vw);
-    }
-  }
-
-  @keyframes top-center {
-    0% {
-      transform: translate(calc(50vw - 50%), -1vw);
-    }
-    10% {
-      opacity: 1;
-      transform: translate(calc(50vw - 50%), 1vw);
-    }
-    90% {
-      opacity: 1;
-      transform: translate(calc(50vw - 50%), 1vw);
-    }
-    100% {
-      transform: translate(calc(50vw - 50%), -1vw);
-    }
-  }
-
-  @keyframes top-start {
-    0% {
-      transform: translate(-1vw, -1vw);
-    }
-    10% {
-      opacity: 1;
-      transform: translate(1vw, 1vw);
-    }
-    90% {
-      opacity: 1;
-      transform: translate(1vw, 1vw);
-    }
-    100% {
-      transform: translate(-1vw, -1vw);
-    }
-  }
-</style>

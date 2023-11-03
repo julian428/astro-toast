@@ -18,15 +18,7 @@ import Toast from "astro-toast";
     <title>Astro</title>
   </head>
   <body>
-    <Toast type="success" position="top-start">Message</Toast>
-    <Toast type="error" position="top-center">Message</Toast>
-    <Toast type="info" position="top-end">Message</Toast>
-    <Toast type="success" position="middle-start">Message</Toast>
-    <Toast position="middle-center">Message</Toast>
-    <Toast type="info" position="middle-end">Message</Toast>
-    <Toast type="success" position="bottom-start">Message</Toast>
-    <Toast type="error" position="bottom-center">Message</Toast>
-    <Toast type="info" position="bottom-end">Message</Toast>
+    <Toast variant="error" where="bottom-end">Message</Toast>
   </body>
 </html>
 ```
@@ -34,9 +26,9 @@ import Toast from "astro-toast";
 ## Props:
 
 ```ts
-type?: "error" | "warning" | "success" | "info";
+variant?: "error" | "warning" | "success" | "info";
 
-position?:
+where?:
 | "top-start"
 | "top-center"
 | "top-end"
